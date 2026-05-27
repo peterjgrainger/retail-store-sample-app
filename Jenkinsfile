@@ -9,15 +9,41 @@ metadata:
 spec:
   serviceAccountName: jenkins
   containers:
-  - name: kaniko
+  - name: kaniko-ui
     image: gcr.io/kaniko-project/executor:debug
     command: ["sleep"]
     args: ["9999999"]
     env:
     - name: AWS_REGION
       value: "eu-west-1"
-    - name: AWS_SDK_LOAD_CONFIG
-      value: "true"
+  - name: kaniko-cart
+    image: gcr.io/kaniko-project/executor:debug
+    command: ["sleep"]
+    args: ["9999999"]
+    env:
+    - name: AWS_REGION
+      value: "eu-west-1"
+  - name: kaniko-catalog
+    image: gcr.io/kaniko-project/executor:debug
+    command: ["sleep"]
+    args: ["9999999"]
+    env:
+    - name: AWS_REGION
+      value: "eu-west-1"
+  - name: kaniko-checkout
+    image: gcr.io/kaniko-project/executor:debug
+    command: ["sleep"]
+    args: ["9999999"]
+    env:
+    - name: AWS_REGION
+      value: "eu-west-1"
+  - name: kaniko-orders
+    image: gcr.io/kaniko-project/executor:debug
+    command: ["sleep"]
+    args: ["9999999"]
+    env:
+    - name: AWS_REGION
+      value: "eu-west-1"
   - name: kubectl
     image: bitnami/kubectl:latest
     command: ["sleep"]
@@ -32,35 +58,35 @@ spec:
     stages {
         stage('Build UI') {
             steps {
-                container('kaniko') {
+                container('kaniko-ui') {
                     sh '/kaniko/executor --context=${WORKSPACE}/src/ui --destination=${REGISTRY}/retail-store-sample-ui:${TAG} --destination=${REGISTRY}/retail-store-sample-ui:latest'
                 }
             }
         }
         stage('Build Cart') {
             steps {
-                container('kaniko') {
+                container('kaniko-cart') {
                     sh '/kaniko/executor --context=${WORKSPACE}/src/cart --destination=${REGISTRY}/retail-store-sample-cart:${TAG} --destination=${REGISTRY}/retail-store-sample-cart:latest'
                 }
             }
         }
         stage('Build Catalog') {
             steps {
-                container('kaniko') {
+                container('kaniko-catalog') {
                     sh '/kaniko/executor --context=${WORKSPACE}/src/catalog --destination=${REGISTRY}/retail-store-sample-catalog:${TAG} --destination=${REGISTRY}/retail-store-sample-catalog:latest'
                 }
             }
         }
         stage('Build Checkout') {
             steps {
-                container('kaniko') {
+                container('kaniko-checkout') {
                     sh '/kaniko/executor --context=${WORKSPACE}/src/checkout --destination=${REGISTRY}/retail-store-sample-checkout:${TAG} --destination=${REGISTRY}/retail-store-sample-checkout:latest'
                 }
             }
         }
         stage('Build Orders') {
             steps {
-                container('kaniko') {
+                container('kaniko-orders') {
                     sh '/kaniko/executor --context=${WORKSPACE}/src/orders --destination=${REGISTRY}/retail-store-sample-orders:${TAG} --destination=${REGISTRY}/retail-store-sample-orders:latest'
                 }
             }
