@@ -30,13 +30,6 @@ spec:
     env:
     - name: AWS_REGION
       value: "eu-west-1"
-  - name: kaniko-checkout
-    image: gcr.io/kaniko-project/executor:debug
-    command: ["sleep"]
-    args: ["9999999"]
-    env:
-    - name: AWS_REGION
-      value: "eu-west-1"
   - name: kaniko-orders
     image: gcr.io/kaniko-project/executor:debug
     command: ["sleep"]
@@ -77,13 +70,6 @@ spec:
                 }
             }
         }
-        stage('Build Checkout') {
-            steps {
-                container('kaniko-checkout') {
-                    sh '/kaniko/executor --context=${WORKSPACE}/src/checkout --destination=${REGISTRY}/retail-store-sample-checkout:${TAG} --destination=${REGISTRY}/retail-store-sample-checkout:latest'
-                }
-            }
-        }
         stage('Build Orders') {
             steps {
                 container('kaniko-orders') {
@@ -98,7 +84,6 @@ spec:
                         kubectl set image deployment/ui ui=${REGISTRY}/retail-store-sample-ui:${TAG} -n default
                         kubectl set image deployment/carts carts=${REGISTRY}/retail-store-sample-cart:${TAG} -n default
                         kubectl set image deployment/catalog catalog=${REGISTRY}/retail-store-sample-catalog:${TAG} -n default
-                        kubectl set image deployment/checkout checkout=${REGISTRY}/retail-store-sample-checkout:${TAG} -n default
                         kubectl set image deployment/orders orders=${REGISTRY}/retail-store-sample-orders:${TAG} -n default
                         kubectl rollout status deployment/ui -n default --timeout=120s
                     """
