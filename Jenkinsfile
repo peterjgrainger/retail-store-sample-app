@@ -38,7 +38,7 @@ spec:
     - name: AWS_REGION
       value: "eu-west-1"
   - name: kubectl
-    image: bitnami/kubectl:latest
+    image: alpine/k8s:1.31.4
     command: ["sleep"]
     args: ["9999999"]
 """
